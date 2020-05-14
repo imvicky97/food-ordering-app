@@ -1,33 +1,22 @@
-import React, { Component } from 'react';
-import Home from './home/Home';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import PrivateRoute from '../common/PrivateRoute';
+import React, {Component} from "react";
+import {BrowserRouter as Router, Route} from "react-router-dom";
+import Header from "../common/Header/Header";
 
 class Controller extends Component {
 
-    constructor(props) {
-        super(props);
-        this.baseUrl = "http://localhost:8080/api/";
-        this.state = {
-            loggedIn: sessionStorage.getItem('access-token') == null ? false : true
-        };
+    constructor() {
+        super();
+        this.baseUrl = "http://localhost:8080/api";
     }
 
-
     render() {
-        return (<Router >
-            <div className="main-container" >
-                <Switch >
-                    <Route exact path='/' render={(props) => < Home {...props} baseUrl={this.baseUrl} />} />
-                    <PrivateRoute exact path='/home'
-                        component={Home}
-                        baseUrl={this.baseUrl}
-                    />
-
-                </Switch>
-            </div>
-        </Router>
-
+        return (
+            <Router>
+                <div className="main-container">
+                    <Route exact path='/' render={(props) => <Header {...props} baseUrl={this.baseUrl}
+                                                                     showSearchArea={true}/>}/>
+                </div>
+            </Router>
         )
     }
 }

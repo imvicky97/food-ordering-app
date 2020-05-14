@@ -2,10 +2,27 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import Controller from './screens/Controller';
+import 'typeface-roboto';
+import Controller from "./screens/Controller";
+import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            light: '#fff',
+            main: "#3f51b5",
+            dark: '#000'
+        }
+    },
+    typography: {
+        useNextVariants: true
+    }
+});
 
 ReactDOM.render(
-    <Controller />,
+    <MuiThemeProvider theme={theme}>
+        <Controller/>
+    </MuiThemeProvider>,
     document.getElementById('root')
 );
 
