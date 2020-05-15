@@ -16,7 +16,7 @@
     margin: 5px;
 }
 
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+::-webkit-input-placeholder {
     color: white;
 }
 

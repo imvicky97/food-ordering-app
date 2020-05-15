@@ -26,7 +26,6 @@ const styles = {
         width: '320px',
         fontSize: 15,
         '&:after': {
-            // The MUI source seems to use this but it doesn't work
             borderBottom: '1px solid white',
         },
     },
@@ -43,7 +42,7 @@ const styles = {
     menuItems: {
         marginTop: 30
     }
-}
+};
 
 const customStyles = {
     content: {
@@ -62,17 +61,17 @@ const TabContainer = function (props) {
             {props.children}
         </Typography>
     );
-}
+};
 
 TabContainer.propTypes = {
     children: PropTypes.node.isRequired
-}
+};
 
 class Header extends Component {
 
     constructor() {
         super();
-        this.baseUrl = "http://localhost:8080/api"
+        this.baseUrl = "http://localhost:8080/api";
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -106,59 +105,58 @@ class Header extends Component {
                 username: username
             })
         }
-    }
+    };
     openModalHandler = () => {
         this.setState({modalIsOpen: true})
-    }
+    };
     closeModalHandler = () => {
-        this.setState({modalIsOpen: false})
+        this.setState({modalIsOpen: false});
         // Login
-        this.setState({contactNoRequired: "dispNone"})
-        this.setState({passwordRequired: "dispNone"})
-        this.setState({value: 0})
+        this.setState({contactNoRequired: "dispNone"});
+        this.setState({passwordRequired: "dispNone"});
+        this.setState({value: 0});
         // Signup
-        this.setState({emailRequired: "dispNone"})
-        this.setState({firstnameRequired: "dispNone"})
+        this.setState({emailRequired: "dispNone"});
+        this.setState({firstnameRequired: "dispNone"});
         this.setState({signupErrorMsg: ""});
         this.setState({loginErrorMsg: ""})
 
-    }
+    };
     tabChangeHandler = (event, value) => {
         this.setState({value});
-        this.setState({contactNoRequired: "dispNone"})
-        this.setState({passwordRequired: "dispNone"})
-        this.setState({emailRequired: "dispNone"})
-        this.setState({firstnameRequired: "dispNone"})
-        this.setState({contactno: ""})
-        this.setState({password: ""})
-        this.setState({email: ""})
-        this.setState({firstname: ""})
+        this.setState({contactNoRequired: "dispNone"});
+        this.setState({passwordRequired: "dispNone"});
+        this.setState({emailRequired: "dispNone"});
+        this.setState({firstnameRequired: "dispNone"});
+        this.setState({contactno: ""});
+        this.setState({password: ""});
+        this.setState({email: ""});
+        this.setState({firstname: ""});
         this.setState({signupErrorMsg: ""});
         this.setState({loginErrorMsg: ""});
-    }
+    };
     loginClickHandler = () => {
-        this.state.password === "" ? this.setState({passwordRequired: "dispBlock"}) : this.setState({passwordRequired: "dispNone"})
+        this.state.password === "" ? this.setState({passwordRequired: "dispBlock"}) : this.setState({passwordRequired: "dispNone"});
         let isValidContactNo = this.contactnoFieldValidation();
         this.setState({
             loginErrorMsg: ""
-        })
+        });
         if (isValidContactNo === true && this.state.password !== "") {
             this.callApiForLogin()
         }
-    }
+    };
     callApiForLogin = () => {
-        console.log("Login api started")
+
         let xhrPosts = new XMLHttpRequest();
-        let that = this
+        let that = this;
 
         let param = window.btoa(this.state.contactno + ":" + this.state.password);
-        console.log(param)
+
         xhrPosts.addEventListener("readystatechange", function () {
 
             if (this.readyState === 4) {
-                console.log(this.responseText)
-                console.log(this.status)
-                var data = JSON.parse(this.responseText)
+
+                var data = JSON.parse(this.responseText);
                 if (this.status === 200) {
                     that.setState({
                         open: true,
@@ -179,10 +177,10 @@ class Header extends Component {
         xhrPosts.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
         xhrPosts.setRequestHeader('authorization', "Basic " + param);
         xhrPosts.send();
-    }
+    };
     signupClickHandler = () => {
         // Validate first Name ....
-        this.state.firstname === "" ? this.setState({firstnameRequired: "dispBlock"}) : this.setState({firstnameRequired: "dispNone"})
+        this.state.firstname === "" ? this.setState({firstnameRequired: "dispBlock"}) : this.setState({firstnameRequired: "dispNone"});
         // Validate Email
         let isValidEmail = this.emailFieldValidation();
         // Validate Password
@@ -194,10 +192,9 @@ class Header extends Component {
         if (isValidEmail === true && isValidPassword === true && isValidContactNo === true) {
             this.callApiForSignup()
         }
-    }
+    };
     callApiForSignup = () => {
-        // let access_token = sessionStorage.getItem('access-token')
-        console.log("Signup api started")
+
         let data = {
             "contact_number": this.state.contactno,
             "email_address": this.state.email,
@@ -206,18 +203,16 @@ class Header extends Component {
             "password": this.state.password
         };
         let xhrPosts = new XMLHttpRequest();
-        let that = this
+        let that = this;
 
         xhrPosts.addEventListener("readystatechange", function () {
 
             if (this.readyState === 4) {
-                console.log(this.responseText)
-                console.log(this.response)
                 if (this.status === 201) {
                     that.setState({
                         open: true,
                         successMessage: "Registered successfully! Please login now!",
-                    })
+                    });
                     that.tabChangeHandler("", 0);
                 } else if (this.status === 400) {
                     that.setState({
@@ -229,7 +224,7 @@ class Header extends Component {
         xhrPosts.open("POST", this.baseUrl + "/customer/signup");
         xhrPosts.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
         xhrPosts.send(JSON.stringify(data));
-    }
+    };
 
     handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -252,7 +247,7 @@ class Header extends Component {
             isValidEmail = pattern;
         }
         return isValidEmail
-    }
+    };
     passwordFieldValidation = () => {
         let isValidPassword = false;
         if (this.state.password === "") {
@@ -269,7 +264,7 @@ class Header extends Component {
             isValidPassword = pattern;
         }
         return isValidPassword
-    }
+    };
     contactnoFieldValidation = () => {
         let isValidContactNo = false;
         if (this.state.contactno === "") {
@@ -280,9 +275,9 @@ class Header extends Component {
         } else {
             // Check for Valid mobile no ...
             var pattern = new RegExp(/^\d{10}$/).test(this.state.contactno);
-            console.log('contact no ' + pattern)
+
             if (this.state.contactno.length === 10 && pattern === true) {
-                isValidContactNo = true
+                isValidContactNo = true;
                 this.setState({
                     validContactNo: true,
                     contactNoRequired: "dispNone"
@@ -295,51 +290,51 @@ class Header extends Component {
             }
         }
         return isValidContactNo
-    }
+    };
     inputContactnoChangeHandler = (e) => {
         this.setState({
             contactno: e.target.value
         })
-    }
+    };
     inputPasswordChangeHandler = (e) => {
         this.setState({
             password: e.target.value
         })
-    }
+    };
     inputFirstnameChangeHandler = (e) => {
         this.setState({
             firstname: e.target.value
         })
-    }
+    };
     inputLastnameChangeHandler = (e) => {
         this.setState({
             lastname: e.target.value
         })
-    }
+    };
     inputEmailChangeHandler = (e) => {
         this.setState({
             email: e.target.value
         })
-    }
+    };
     openMenuItemsHandler = (event) => {
         this.setState({
             showUserProfileDropDown: true
         });
         this.setState({anchorEl: event.currentTarget})
-    }
+    };
     closeMenuItemsHandler = () => {
         this.setState({
             showUserProfileDropDown: false
         });
         this.setState({anchorEl: null})
-    }
+    };
 
     openProfilePageHandler = () => {
         this.closeMenuItemsHandler();
         this.props.history.push({
             pathname: "/profile"
         });
-    }
+    };
 
     logoutHandler = () => {
         this.closeMenuItemsHandler();
@@ -349,17 +344,16 @@ class Header extends Component {
         });
         this.callApiForLogout()
 
-    }
+    };
     callApiForLogout = () => {
-        console.log("log-out api started")
+
         let xhrPosts = new XMLHttpRequest();
-        let that = this
+        let that = this;
         xhrPosts.addEventListener("readystatechange", function () {
 
             if (this.readyState === 4) {
-                var data = JSON.parse(this.responseText)
-                console.log(this.responseText);
-                console.log(this.status)
+                var data = JSON.parse(this.responseText);
+
                 if (this.status === 200) {
                     that.props.history.push({
                         pathname: "/"
@@ -395,6 +389,7 @@ class Header extends Component {
                     <div>
                         <Input className={classes.root}
                                id="input-with-icon-adornment"
+                               onChange={this.props.searchByRestaurantName.bind(this)}
                                startAdornment={
                                    <InputAdornment position="start" className="search">
                                        <SvgIcon>
