@@ -37,6 +37,7 @@ class Home extends Component {
 
     constructor() {
         super();
+        this.searchByRestaurantName = this.searchByRestaurantName.bind(this);
         this.state = {
             restaurantData: [],
             filteredRestaurantData: [],
@@ -66,7 +67,26 @@ class Home extends Component {
         xhrPosts.send();
     };
 
-
+    searchByRestaurantName = event => {
+        let currentRestaurantData = [...this.state.restaurantData];
+        const searchValue = event.target.value;
+        console.log(searchValue);
+        if (!Utils.isEmpty(searchValue)) {
+            let searchResults = [];
+            for (var restaurant in currentRestaurantData) {
+                if (!Utils.isUndefinedOrNull(currentRestaurantData[restaurant].restaurant_name) &&
+                    currentRestaurantData[restaurant].restaurant_name.toLowerCase().includes(searchValue.toLowerCase())) {
+                    searchResults.push(currentRestaurantData[restaurant])
+                }
+            }
+            this.setState({
+                filteredRestaurantData: searchResults,
+                currentSearchValue: searchValue
+            })
+        } else {
+            this.setState({currentSearchValue: searchValue});
+        }
+    };
     cardClickedHandler = (restaurant_id, restaurant_categories) => {
         console.log(restaurant_id);
 
@@ -74,7 +94,7 @@ class Home extends Component {
             pathname: "/restaurant/" + restaurant_id,
             categories: restaurant_categories
         })
-    }
+    };
 
     render() {
         const {classes} = this.props;
@@ -87,6 +107,7 @@ class Home extends Component {
         return (
             <div>
                 <Header history={this.props.history}
+                        searchByRestaurantName={this.searchByRestaurantName}
                         showSearchArea={true}/>
                 <div className="flex-container">
                     {dataSource && dataSource.map(restaurant => (

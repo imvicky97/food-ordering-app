@@ -26,7 +26,6 @@ const styles = {
         width: '320px',
         fontSize: 15,
         '&:after': {
-            // The MUI source seems to use this but it doesn't work
             borderBottom: '1px solid white',
         },
     },
