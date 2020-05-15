@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router, Route} from "react-router-dom";
-import Header from "../common/Header/Header";
+import Home from "./home/Home";
 
 class Controller extends Component {
 
@@ -13,8 +13,7 @@ class Controller extends Component {
         return (
             <Router>
                 <div className="main-container">
-                    <Route exact path='/' render={(props) => <Header {...props} baseUrl={this.baseUrl}
-                                                                     showSearchArea={true}/>}/>
+                    <Route exact path='/' render={(props) => <Home {...props} baseUrl={this.baseUrl}/>}/>
                 </div>
             </Router>
         )
