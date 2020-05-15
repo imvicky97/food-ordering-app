@@ -56,7 +56,7 @@ class Home extends Component {
 
         xhrPosts.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                console.log(JSON.parse(this.responseText));
+
                 let data = JSON.parse(this.responseText);
                 scope.setState({
                     restaurantData: data.restaurants
@@ -70,7 +70,7 @@ class Home extends Component {
     searchByRestaurantName = event => {
         let currentRestaurantData = [...this.state.restaurantData];
         const searchValue = event.target.value;
-        console.log(searchValue);
+
         if (!Utils.isEmpty(searchValue)) {
             let searchResults = [];
             for (var restaurant in currentRestaurantData) {
@@ -88,8 +88,6 @@ class Home extends Component {
         }
     };
     cardClickedHandler = (restaurant_id, restaurant_categories) => {
-        console.log(restaurant_id);
-
         this.props.history.push({
             pathname: "/restaurant/" + restaurant_id,
             categories: restaurant_categories

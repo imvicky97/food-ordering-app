@@ -146,17 +146,16 @@ class Header extends Component {
         }
     };
     callApiForLogin = () => {
-        console.log("Login api started");
+
         let xhrPosts = new XMLHttpRequest();
         let that = this;
 
         let param = window.btoa(this.state.contactno + ":" + this.state.password);
-        console.log(param);
+
         xhrPosts.addEventListener("readystatechange", function () {
 
             if (this.readyState === 4) {
-                console.log(this.responseText);
-                console.log(this.status);
+
                 var data = JSON.parse(this.responseText);
                 if (this.status === 200) {
                     that.setState({
@@ -195,8 +194,7 @@ class Header extends Component {
         }
     };
     callApiForSignup = () => {
-        // let access_token = sessionStorage.getItem('access-token')
-        console.log("Signup api started");
+
         let data = {
             "contact_number": this.state.contactno,
             "email_address": this.state.email,
@@ -210,8 +208,6 @@ class Header extends Component {
         xhrPosts.addEventListener("readystatechange", function () {
 
             if (this.readyState === 4) {
-                console.log(this.responseText);
-                console.log(this.response);
                 if (this.status === 201) {
                     that.setState({
                         open: true,
@@ -279,7 +275,7 @@ class Header extends Component {
         } else {
             // Check for Valid mobile no ...
             var pattern = new RegExp(/^\d{10}$/).test(this.state.contactno);
-            console.log('contact no ' + pattern);
+
             if (this.state.contactno.length === 10 && pattern === true) {
                 isValidContactNo = true;
                 this.setState({
@@ -350,15 +346,14 @@ class Header extends Component {
 
     };
     callApiForLogout = () => {
-        console.log("log-out api started");
+
         let xhrPosts = new XMLHttpRequest();
         let that = this;
         xhrPosts.addEventListener("readystatechange", function () {
 
             if (this.readyState === 4) {
                 var data = JSON.parse(this.responseText);
-                console.log(this.responseText);
-                console.log(this.status);
+
                 if (this.status === 200) {
                     that.props.history.push({
                         pathname: "/"
