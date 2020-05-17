@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Checkout.css';
 import DeliveryAddress from './DeliveryAddress';
+import PaymentMode from './PaymentMode';
 import Header from '../../common/header/Header';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -31,17 +32,13 @@ function getSteps() {
     return ['Delivery', 'Payment'];
 }
 
-function getStepContent(step, props, address, payment, existingAddressNext, newAddressNext, changePayment, changeAddress, PaymentButton) {
-    // console.log("checkout " + props.Url)
-
+function getStepContent(step, props, address, payment, changePayment, changeAddress) {
     switch (step) {
         case 0:
-            return (<DeliveryAddress {...props} existingAddress={existingAddressNext} newAddressNext={newAddressNext} onChangeAddress={changeAddress} selectedAddress={address}></DeliveryAddress>);
-
+            return (<DeliveryAddress {...props} onChangeAddress={changeAddress} selectedAddress={address}></DeliveryAddress>);
             
         case 1:
-            return (<div></div>);
-            
+            return (<PaymentMode {...props} onChangePayment={changePayment} selectedPayment={payment}></PaymentMode>);         
 
         default:
             return 'Unknown step';
@@ -52,15 +49,16 @@ function CheckOutStepper(props) {
     const classes = useStyles;
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
-    const [NextButtonEnabled, setNextButtonEnabled] = React.useState(0);
     const [selectedAddress, setSelectedAddress] = React.useState("");
     const [selectedPayment, setSelectedPayment] = React.useState("");
-    const [FinishButtonEnabled, setFinishButtonEnabled] = React.useState(0);
-
-
+    
 
     const handleNext = () => {
-        if (NextButtonEnabled === 1 || FinishButtonEnabled === 1) {
+        console.log("Handle next button " + "active step " + activeStep);
+        if (selectedAddress!=="" && activeStep===0) {
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
+        if (selectedPayment!=="" && activeStep===1) {
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
     }
@@ -72,39 +70,15 @@ function CheckOutStepper(props) {
     const handleReset = () => {
         setActiveStep(0);
     };
-
-    const FinishBtnEnabled = () => {
-        // console.log("finsih button " + FinishButtonEnabled);
-        if (FinishButtonEnabled === 0) {
-            setFinishButtonEnabled(1);
-        }
-        // console.log("finsih button after  " + FinishButtonEnabled);
-    };
-
-    const ButtonEnabled = () => {
-        // console.log("Button enabled " + NextButtonEnabled);
-        if (NextButtonEnabled === 0) {
-            setNextButtonEnabled(1);
-        }
-
-    };
-
-    const ButtonDisbledForSaveAddress = () => {
-        // console.log("Button disabled " + NextButtonEnabled);
-        if (NextButtonEnabled === 1) {
-            setNextButtonEnabled(0);
-        }
-    };
-
-    const SelectedDeliveryAddress = (address) => {
+    
+    const selectedDeliveryAddress = (address) => {
 
         setSelectedAddress(address);
     };
 
-    const SelectedDeliveryPayment = (payment) => {
+    const selectedDeliveryPayment = (payment) => {
         setSelectedPayment(payment);
     };
-
 
     return (
         <div className={classes.root}>
@@ -113,7 +87,7 @@ function CheckOutStepper(props) {
                     <Step key={label}>
                         <StepLabel>{label}</StepLabel>
                         <StepContent>
-                            {getStepContent(index, props, selectedAddress, selectedPayment, ButtonEnabled, ButtonDisbledForSaveAddress, SelectedDeliveryPayment, SelectedDeliveryAddress, FinishBtnEnabled)}
+                            {getStepContent(index, props, selectedAddress, selectedPayment, selectedDeliveryPayment, selectedDeliveryAddress)}
                             <div className={classes.actionsContainer}>
                                 <div>
                                     <Button
@@ -137,36 +111,33 @@ function CheckOutStepper(props) {
                         </StepContent>
                     </Step>
                 ))}
-                {activeStep === steps.length && (
-                <Paper square elevation={0} className={classes.resetContainer}>
+               
+            </Stepper>
+            {activeStep === steps.length && (
+                    
+                <Paper elevation={0} className={classes.resetContainer} last={activeStep.toString()}>
                     <Typography>View the summary and place your order now!</Typography>
                     <Button onClick={handleReset} className={classes.button}>
                         CHANGE
-            </Button>
+                    </Button>
                 </Paper>
             )}
-            </Stepper>
             
         </div>
     )
 
 }
 class Checkout extends Component {
-
     steps = getSteps();
-
     constructor() {
         super();
         this.state = {
             accessToken: sessionStorage.getItem('access-token'),
-
         };
-
     }
 
     UNSAFE_componentWillMount()
     {
-        // console.log("Delivery"+this.props.baseUrl)
         if(sessionStorage.getItem('access-token')==="")
         {
             this.props.history.push('/');
