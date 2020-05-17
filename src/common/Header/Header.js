@@ -378,7 +378,7 @@ class Header extends Component {
         const {anchorEl} = this.state;
 
         return (
-            <div>
+            <div className="container">
                 <header className="app-header">
                     <div>
                         <SvgIcon className="app-logo">
