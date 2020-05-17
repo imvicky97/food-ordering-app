@@ -9,7 +9,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Star from '@material-ui/icons/Star';
-import Header from "../../common/Header/Header";
+import Header from "../../common/header/Header";
 
 const styles = {
     card: {
