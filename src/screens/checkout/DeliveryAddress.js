@@ -124,6 +124,7 @@ class DeliveryAddress extends Component {
     }
 
     UNSAFE_componentWillMount() {
+        let that = this;
         this.setState({ selectedAddress: this.props.selectedAddress })
         let ShowAdderss = null;
         let xhrgetAddress = new XMLHttpRequest();
