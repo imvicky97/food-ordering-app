@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Checkout.css';
+import DeliveryAddress from './DeliveryAddress';
 import Header from '../../common/header/Header';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -30,15 +31,16 @@ function getSteps() {
     return ['Delivery', 'Payment'];
 }
 
-function getStepContent(step, url, address, payment, existingAddressNext, newAddressNext, changePayment, changeAddress, PaymentButton) {
-    console.log("checkout " + payment)
+function getStepContent(step, props, address, payment, existingAddressNext, newAddressNext, changePayment, changeAddress, PaymentButton) {
+    // console.log("checkout " + props.Url)
 
     switch (step) {
         case 0:
-            return(<div></div>)
+            return (<DeliveryAddress {...props} existingAddress={existingAddressNext} newAddressNext={newAddressNext} onChangeAddress={changeAddress} selectedAddress={address}></DeliveryAddress>);
+
             
         case 1:
-            return(<div></div>)
+            return (<div></div>);
             
 
         default:
@@ -58,7 +60,9 @@ function CheckOutStepper(props) {
 
 
     const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        if (NextButtonEnabled === 1 || FinishButtonEnabled === 1) {
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
     }
 
     const handleBack = () => {
@@ -70,15 +74,15 @@ function CheckOutStepper(props) {
     };
 
     const FinishBtnEnabled = () => {
-        console.log("finsih button " + FinishButtonEnabled);
+        // console.log("finsih button " + FinishButtonEnabled);
         if (FinishButtonEnabled === 0) {
             setFinishButtonEnabled(1);
         }
-        console.log("finsih button after  " + FinishButtonEnabled);
+        // console.log("finsih button after  " + FinishButtonEnabled);
     };
 
     const ButtonEnabled = () => {
-        console.log("Button enabled " + NextButtonEnabled);
+        // console.log("Button enabled " + NextButtonEnabled);
         if (NextButtonEnabled === 0) {
             setNextButtonEnabled(1);
         }
@@ -86,7 +90,7 @@ function CheckOutStepper(props) {
     };
 
     const ButtonDisbledForSaveAddress = () => {
-        console.log("Button disabled " + NextButtonEnabled);
+        // console.log("Button disabled " + NextButtonEnabled);
         if (NextButtonEnabled === 1) {
             setNextButtonEnabled(0);
         }
@@ -109,7 +113,7 @@ function CheckOutStepper(props) {
                     <Step key={label}>
                         <StepLabel>{label}</StepLabel>
                         <StepContent>
-                            {getStepContent(index, props.Url, selectedAddress, selectedPayment, ButtonEnabled, ButtonDisbledForSaveAddress, SelectedDeliveryPayment, SelectedDeliveryAddress, FinishBtnEnabled)}
+                            {getStepContent(index, props, selectedAddress, selectedPayment, ButtonEnabled, ButtonDisbledForSaveAddress, SelectedDeliveryPayment, SelectedDeliveryAddress, FinishBtnEnabled)}
                             <div className={classes.actionsContainer}>
                                 <div>
                                     <Button
@@ -160,20 +164,26 @@ class Checkout extends Component {
 
     }
 
-
+    UNSAFE_componentWillMount()
+    {
+        // console.log("Delivery"+this.props.baseUrl)
+        if(sessionStorage.getItem('access-token')==="")
+        {
+            this.props.history.push('/');
+        }
+    }
    
 
-    render() {
+    render() {        
         return (
             <div>
                 <div>
                     <Header history={this.props.history}
-                        showSearchArea={false} />
-                    
+                        showSearchArea={false} />                    
                 </div>
                 <div className="CheckOutBoxContainer">
                     <div className="stepperContainer">
-                        <CheckOutStepper Url={this.props.baseUrl}></CheckOutStepper>
+                        <CheckOutStepper {...this.props} Url={this.props.baseUrl}></CheckOutStepper>
                     </div>
                    
                 </div>
