@@ -75,7 +75,6 @@ class DeliveryAddress extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
             value: 0,
             FlatNameRequired: "dispNone",
             flatnumber: "",
@@ -125,40 +124,11 @@ class DeliveryAddress extends Component {
     }
 
     UNSAFE_componentWillMount() {
-        // console.log(this.props)
-        if (this.props.selectedAddress === "") {
-            this.props.newAddressNext();
-        }
-
         this.setState({ selectedAddress: this.props.selectedAddress })
-
-
-
-        let that = this;
-        let state = null;
-        let xhrUser = new XMLHttpRequest();
-        xhrUser.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
-
-                that.setState({
-                    states: JSON.parse(this.responseText).states
-
-                });
-
-            }
-        });
-
-        xhrUser.open("GET", this.props.Url + "/states");
-        xhrUser.setRequestHeader("Cache-Control", "no-cache");
-        xhrUser.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-        xhrUser.send(state);
-
-
         let ShowAdderss = null;
         let xhrgetAddress = new XMLHttpRequest();
         xhrgetAddress.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                // console.log((this.responseText))
                 that.setState({
                     addresses: JSON.parse(this.responseText).addresses
 
@@ -170,15 +140,10 @@ class DeliveryAddress extends Component {
         xhrgetAddress.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
         xhrgetAddress.setRequestHeader("Cache-Control", "no-cache");
         xhrgetAddress.send(ShowAdderss);
-
-        // this.props.history.push('/');
-
     }
 
-    IconClickHandler = (address) => {
-
+    iconClickHandler = (address) => {
         this.setState({ selectedAddress: address })
-        this.props.existingAddress();
         this.props.onChangeAddress(address);
     }
 
@@ -187,10 +152,27 @@ class DeliveryAddress extends Component {
 
         this.setState({ value });
         if (value === 1) {
-            this.props.newAddressNext();
+            let that = this;
+            let state = null;
+            let xhrUser = new XMLHttpRequest();
+            xhrUser.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+    
+                    that.setState({
+                        states: JSON.parse(this.responseText).states
+    
+                    });
+    
+                }
+            });    
+            xhrUser.open("GET", this.props.Url + "/states");
+            xhrUser.setRequestHeader("Cache-Control", "no-cache");
+            xhrUser.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            xhrUser.send(state);
+
+            this.props.onChangeAddress("");
         }
         if (value === 0) {
-
             let that = this;
             let ShowAdderss = null;
             let xhrgetAddress = new XMLHttpRequest();
@@ -206,16 +188,12 @@ class DeliveryAddress extends Component {
             xhrgetAddress.setRequestHeader("Authorization", "Bearer " + sessionStorage.getItem('access-token'));
             xhrgetAddress.setRequestHeader("Cache-Control", "no-cache");
             xhrgetAddress.send(ShowAdderss);
-
-            if (this.props.selectedAddress !== "") {
-                this.props.existingAddress();
-            }
-
+            this.props.onChangeAddress(this.state.selectedAddress);           
         }
 
     }
 
-    SaveAddressClcikHandler = () => {
+    saveAddressClcikHandler = () => {
         this.state.flatnumber === "" ? this.setState({ FlatNameRequired: "dispBlock" }) : this.setState({ FlatNameRequired: "dispNone" });
         this.state.locality === "" ? this.setState({ LocalityRequired: "dispBlock" }) : this.setState({ LocalityRequired: "dispNone" });
         this.state.city === "" ? this.setState({ CityRequired: "dispBlock" }) : this.setState({ CityRequired: "dispNone" });
@@ -314,7 +292,7 @@ class DeliveryAddress extends Component {
 
                         {this.state.addresses.map(address => (
 
-                            <GridListTile style={CustomStyles} onClick={() => this.IconClickHandler(address)} className={this.state.selectedAddress.id === address.id ? classes.addreesBorder + " AddressBorder " + " AddressContainer" : " AddressContainer"} key={"address" + address.id} cols={1}>
+                            <GridListTile style={CustomStyles} onClick={() => this.iconClickHandler(address)} className={this.state.selectedAddress.id === address.id ? classes.addreesBorder + " AddressBorder " + " AddressContainer" : " AddressContainer"} key={"address" + address.id} cols={1}>
                                 <Typography>
                                     {address.flat_building_name}<br />
                                     {address.locality}<br />
@@ -386,7 +364,7 @@ class DeliveryAddress extends Component {
                             </FormHelperText>
                         </FormControl><br /><br /><br />
 
-                        <Button variant="contained" color="secondary" onClick={this.SaveAddressClcikHandler}>
+                        <Button variant="contained" color="secondary" onClick={this.saveAddressClcikHandler}>
                             Save Address
                     </Button><br /><br /><br />
                     </TabContainer>}
