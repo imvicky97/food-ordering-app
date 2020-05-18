@@ -11,6 +11,8 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import Summary from './Summary';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,9 +38,9 @@ function getStepContent(step, props, address, payment, changePayment, changeAddr
     switch (step) {
         case 0:
             return (<DeliveryAddress {...props} onChangeAddress={changeAddress} selectedAddress={address}></DeliveryAddress>);
-            
+
         case 1:
-            return (<PaymentMode {...props} onChangePayment={changePayment} selectedPayment={payment}></PaymentMode>);         
+            return (<PaymentMode {...props} onChangePayment={changePayment} selectedPayment={payment}></PaymentMode>);
 
         default:
             return 'Unknown step';
@@ -51,15 +53,15 @@ function CheckOutStepper(props) {
     const steps = getSteps();
     const [selectedAddress, setSelectedAddress] = React.useState("");
     const [selectedPayment, setSelectedPayment] = React.useState("");
-    
+
 
     const handleNext = () => {
-        console.log("Handle next button " + "active step " + activeStep);
-        if (selectedAddress!=="" && activeStep===0) {
+        if (selectedAddress !== "" && activeStep === 0) {
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
-        if (selectedPayment!=="" && activeStep===1) {
+        if (selectedPayment !== "" && activeStep === 1) {
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
+            props.setPayment(selectedPayment);
         }
     }
 
@@ -70,17 +72,22 @@ function CheckOutStepper(props) {
     const handleReset = () => {
         setActiveStep(0);
     };
-    
+
     const selectedDeliveryAddress = (address) => {
 
         setSelectedAddress(address);
-    };
+        props.setAddress(address);    };
 
     const selectedDeliveryPayment = (payment) => {
         setSelectedPayment(payment);
+        // console.log(activeStep)
+        // if(activeStep===2){
+        // props.setPayment(payment);
+        // }
     };
 
     return (
+
         <div className={classes.root}>
             <Stepper activeStep={activeStep} orientation="vertical">
                 {steps.map((label, index) => (
@@ -111,10 +118,10 @@ function CheckOutStepper(props) {
                         </StepContent>
                     </Step>
                 ))}
-               
+
             </Stepper>
             {activeStep === steps.length && (
-                    
+
                 <Paper elevation={0} className={classes.resetContainer} last={activeStep.toString()}>
                     <Typography>View the summary and place your order now!</Typography>
                     <Button onClick={handleReset} className={classes.button}>
@@ -122,42 +129,58 @@ function CheckOutStepper(props) {
                     </Button>
                 </Paper>
             )}
-            
+
         </div>
     )
 
 }
 class Checkout extends Component {
     steps = getSteps();
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             accessToken: sessionStorage.getItem('access-token'),
+            cartItems: [],
+            restaurantDetails: [],
+            addressId:"",
+            paymentId:""
         };
     }
 
-    UNSAFE_componentWillMount()
-    {
-        if(sessionStorage.getItem('access-token')==="")
-        {
+    UNSAFE_componentWillMount() {
+        if (sessionStorage.getItem('access-token') === "" || this.props.location.cartItems === undefined) {
             this.props.history.push('/');
         }
     }
-   
+    setPaymentId=(payment)=>{
+        this.setState({paymentId:payment})
+    }
+    setAddressId=(address)=>{
+        this.setState({addressId:address.id})
+    }
 
-    render() {        
+
+    render() {
+        console.log(this.props.location.cartItems);
         return (
             <div>
                 <div>
                     <Header history={this.props.history}
-                        showSearchArea={false} />                    
+                        showSearchArea={false} />
                 </div>
-                <div className="CheckOutBoxContainer">
-                    <div className="stepperContainer">
-                        <CheckOutStepper {...this.props} Url={this.props.baseUrl}></CheckOutStepper>
+                {this.props.location.cartItems !== undefined &&
+                    <div className="CheckOutBoxContainer">
+                        <div className="stepperContainer">
+                            <CheckOutStepper {...this.props} Url={this.props.baseUrl} setPayment={this.setPaymentId} setAddress={this.setAddressId}></CheckOutStepper>
+                        </div>
+                        <div className="cardContainer">
+                            <Summary {...this.props}  cartItems={this.props.location.cartItems} restaurantDetails={this.props.location.restaurantDetails} paymentId={this.state.paymentId} addressId={this.state.addressId} />
+                        </div>
                     </div>
-                   
-                </div>
+
+
+                }
+                
             </div>
         )
     }

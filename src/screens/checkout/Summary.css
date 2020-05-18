@@ -1,0 +1,26 @@
+
+/* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+    .SummaryCardContainer{
+        margin-left: 50px;
+        padding-bottom: 20px;
+    }
+}
+
+p{
+    font-size: x-large;
+    font-weight: 400;
+}
+
+.ResaturantNameContainer{
+    font-size: large;
+}
+
+.NetAmountConatiner{
+    display: flex;
+    justify-content: space-between;
+}

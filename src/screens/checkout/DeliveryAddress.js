@@ -200,7 +200,7 @@ class DeliveryAddress extends Component {
         this.state.city === "" ? this.setState({ CityRequired: "dispBlock" }) : this.setState({ CityRequired: "dispNone" });
         this.state.selectstate === "" ? this.setState({ StateRequired: "dispBlock" }) : this.setState({ StateRequired: "dispNone" });
         this.state.pincode === "" ? this.setState({ PincodeRequired: "dispBlock" }) : this.setState({ PincodeRequired: "dispNone" });
-        //console.log(this.state.pincode.length);
+        
         if (this.state.pincode === "") {
             this.setState({ pincodeMessage: "required" });
         }
@@ -272,7 +272,6 @@ class DeliveryAddress extends Component {
 
     render() {
         const { classes } = this.props;
-        // console.log(this.state.addresses!== null)
         return (
             <div className="TabContainer">
                 <AppBar position="static">

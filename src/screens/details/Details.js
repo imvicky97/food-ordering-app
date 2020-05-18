@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import Header from '../../common/header/Header';
 import Typography from '@material-ui/core/Typography';
-import { withStyles, CardContent } from '@material-ui/core';
+import { withStyles,CardContent } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
-import Card from '@material-ui/core/Card';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import CardHeader from '@material-ui/core/CardHeader';
-import Avatar from '@material-ui/core/Avatar';
-import Badge from '@material-ui/core/Badge';
-import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Fade from '@material-ui/core/Fade';
-
+import CardHeader from '@material-ui/core/CardHeader';
+import Badge from '@material-ui/core/Badge';
+import Button from '@material-ui/core/Button';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import CartItems from './CartItems'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import 'font-awesome/css/font-awesome.min.css';
 import '@fortawesome/fontawesome-free-solid';
@@ -198,88 +198,26 @@ class Details extends Component {
         
         })
     }
-
-    //This Method is called when the minus button in the cart is clicked.
-    //It take item as the parameter 
-    //This method updates the quantity of the item and reduces by 1 for each click.
-    //If the item is reduced to zero the the item is removed from the cart.
-    //After each update a relevant snackbar message is shown.
-    minusButtonClickHandler =  (item) => {
-        let cartItems = this.state.cartItems;
-        let index =  cartItems.indexOf(item);
-        let itemRemoved = false;
-        cartItems[index].quantity--; //Reducing the quantity of the item
-        if(cartItems[index].quantity === 0){ //Checking if the quantity is zero to remove from the cart
-            cartItems.splice(index,1);
-            itemRemoved = true;
-        }else{
-            cartItems[index].totalAmount = cartItems[index].price * cartItems[index].quantity; //Updating the Price of the item
-        }
-
-        // updating the total amount of the cart
-        let totalAmount = 0;
-        cartItems.forEach(cartItem =>{
-            totalAmount = totalAmount + cartItem.totalAmount;
-        })
-
-        //Updating the state
-        this.setState({
-            ...this.state,
-            cartItems: cartItems,
-            snackBarOpen: true,
-            snackBarMessage: itemRemoved ? "Item removed from cart!" :"Item quantity decreased by 1!",
-            totalAmount:totalAmount,
-
-        })
-    }
-
-    //This method is called when the add button in the cart is clicked.
-    //This method takes item as the parameter.
-    //This method finds the corresponding item and updates it quantity by 1 for each click.
-    //After each update a relevant snackbar message is shown.
-    cartAddButtonClickHandler = (item) => {
-        let cartItems = this.state.cartItems;
-        let index =  cartItems.indexOf(item);
-        cartItems[index].quantity++; //Updating the quantity ofthe relevant item in the cart
-        cartItems[index].totalAmount = cartItems[index].price * cartItems[index].quantity; //updating the total price of the item
-        
-        //Updating the Total amount ofthe cart 
-        let totalAmount = 0;
-        cartItems.forEach(cartItem =>{
-            totalAmount = totalAmount + cartItem.totalAmount;
-        })
-
-        //Updating the state
-        this.setState({
-            ...this.state,
-            cartItems: cartItems,
-            snackBarOpen: true,
-            snackBarMessage: "Item quantity increased by 1!",
-            totalAmount:totalAmount,
-
-        })
-    } 
-
     //This Method is called when the checkout button in the cart is clicked
     //This method checks for two condition such as if the item is added to the cart & if the user is logged in
     //If both the condition is satisfied then pushes to next checkout screen with the cart & restaurant details.
     //For Both the condition relevant snack bar message is displayed.
-    checkOutButtonClickHandler= () => {
-        let cartItems =  this.state.cartItems;
+    checkOutButtonClickHandler = () => {
+        let cartItems = this.state.cartItems;
         let isLoggedIn = sessionStorage.getItem("access-token") == null ? false : true;
-        if(cartItems.length === 0){ //Checking if cart is empty 
+        if (cartItems.length === 0) { //Checking if cart is empty 
             this.setState({
-            ...this.state,
-            snackBarOpen: true,
-            snackBarMessage: "Please add an item to your cart!",
+                ...this.state,
+                snackBarOpen: true,
+                snackBarMessage: "Please add an item to your cart!",
             })
-        }else if(!isLoggedIn){ //Checking if customer is not loggedIn.
+        } else if (!isLoggedIn) { //Checking if customer is not loggedIn.
             this.setState({
                 ...this.state,
                 snackBarOpen: true,
                 snackBarMessage: "Please login first!",
             })
-        }else{ //If all the condition are satisfied user pushed to the checkout screen
+        } else { //If all the condition are satisfied user pushed to the checkout screen
             this.props.history.push({
                 pathname: '/checkout',
                 cartItems: this.state.cartItems,
@@ -287,7 +225,6 @@ class Details extends Component {
             })
         }
     }
-
 
     //Handles Close function of the snackBar
     snackBarClose = (event, reason) => {
@@ -307,6 +244,14 @@ class Details extends Component {
             ...this.state,
             badgeVisible:!this.state.badgeVisible,
         })
+    }
+
+    updateTotalAmount=(amount)=>{
+        this.setState({
+            ...this.state,
+            totalAmount:amount,
+        })
+    
     }
 
 render() {
@@ -373,55 +318,37 @@ render() {
                 </div>
                 {/* Cart Card */}
                 <div className="my-cart">
-                    <Card className={classes.myCart}>
-                        <CardHeader
-                            avatar={
-                                <Avatar aria-label="shopping-cart" className={classes.shoppingCart}>
-                                    <Badge badgeContent={this.state.cartItems.length} color="primary" showZero = {true} invisible={this.state.badgeVisible} className={classes.badge}>
-                                        <ShoppingCartIcon />
-                                    </Badge>
-                                </Avatar>
-                            }
-                            title="My Cart"
-                            titleTypographyProps={{
-                                variant: 'h6'
-                            }}
-                            className={classes.cartHeader}
-                        />
-                        <CardContent className={classes.cardContent}>
-                            {this.state.cartItems.map(cartItem => ( //Iterating over each item in cartItem to show in the cart.
-                            <div className="cart-menu-item-container" key={cartItem.id}>
-                                <i className="fa fa-stop-circle-o" aria-hidden="true" style={{color:cartItem.itemType === "NON_VEG" ? "#BE4A47" : "#5A9A5B"}}></i>
-                                <Typography variant="subtitle1" component="p" className={classes.menuItemName} id="cart-menu-item-name" >{cartItem.name[0].toUpperCase() + cartItem.name.slice(1)}</Typography>
-                                <div className="quantity-container">
-                                <IconButton className={classes.cartItemButton} id="minus-button" aria-label="remove" onClick = {() => this.minusButtonClickHandler(cartItem)} >
-                                    <FontAwesomeIcon icon="minus" size="xs" color="black" />
-                                </IconButton>
-                                <Typography variant="subtitle1" component="p" className={classes.itemQuantity}>{cartItem.quantity}</Typography>
-                                <IconButton className={classes.cartItemButton} aria-label="add"  onClick = {() => this.cartAddButtonClickHandler(cartItem)}>
-                                    <FontAwesomeIcon icon="plus" size="xs" color="black" />
-                                </IconButton>
-                                </div>
-                                <div className="item-price">
-                                    <i className="fa fa-inr" aria-hidden="true" style={{ color: 'grey' }}></i>
-                                    <Typography variant="subtitle1" component="p" className={classes.itemPrice} id="cart-item-price">{cartItem.totalAmount.toFixed(2)}</Typography>
-                                </div>
+                <Card className={classes.myCart}>
+                    <CardHeader
+                        avatar={
+                            <Avatar aria-label="shopping-cart" className={classes.shoppingCart}>
+                                <Badge badgeContent={this.state.cartItems.length} color="primary" showZero={true} invisible={this.state.badgeVisible} className={classes.badge}>
+                                    <ShoppingCartIcon />
+                                </Badge>
+                            </Avatar>
+                        }
+                        title="My Cart"
+                        titleTypographyProps={{
+                            variant: 'h6'
+                        }}
+                        className={classes.cartHeader}
+                    />
+                    <CardContent className={classes.cardContent}>
+                        <CartItems cartItems={this.state.cartItems} showPlusMinusButton={true} updateTotal={this.updateTotalAmount}></CartItems>
+                        <div className="total-amount-container">
+                            <Typography variant="subtitle2" component="p" className={classes.totalAmount}>TOTAL AMOUNT</Typography>
+                            <div className="total-price">
+                                <i className="fa fa-inr" aria-hidden="true" ></i>
+                                <Typography variant="subtitle1" component="p" className={classes.itemPrice} id="cart-total-price">{this.state.totalAmount.toFixed(2)}</Typography>
                             </div>
-                            ))}
-                            <div className="total-amount-container">
-                                <Typography variant="subtitle2" component="p" className={classes.totalAmount}>TOTAL AMOUNT</Typography>
-                                <div className="total-price">
-                                    <i className="fa fa-inr" aria-hidden="true" ></i>
-                                    <Typography variant="subtitle1" component="p" className={classes.itemPrice} id="cart-total-price">{this.state.totalAmount.toFixed(2)}</Typography>
-                                </div>
-                            </div>
+                        </div>
 
-                            <Button variant="contained" color='primary' fullWidth={true} className={classes.checkOutButton} onClick = {this.checkOutButtonClickHandler}>CHECKOUT</Button>
+                        <Button variant="contained" color='primary' fullWidth={true} className={classes.checkOutButton} onClick={this.checkOutButtonClickHandler}>CHECKOUT</Button>
 
-                        </CardContent>
+                    </CardContent>
 
-                    </Card>
-                </div>
+                </Card>
+            </div>
             </div>
             <div>
                 <Snackbar
