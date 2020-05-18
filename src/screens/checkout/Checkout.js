@@ -76,14 +76,12 @@ function CheckOutStepper(props) {
     const selectedDeliveryAddress = (address) => {
 
         setSelectedAddress(address);
-        props.setAddress(address);    };
+        props.setAddress(address);
+    };
 
     const selectedDeliveryPayment = (payment) => {
         setSelectedPayment(payment);
-        // console.log(activeStep)
-        // if(activeStep===2){
-        // props.setPayment(payment);
-        // }
+
     };
 
     return (
@@ -142,8 +140,8 @@ class Checkout extends Component {
             accessToken: sessionStorage.getItem('access-token'),
             cartItems: [],
             restaurantDetails: [],
-            addressId:"",
-            paymentId:""
+            addressId: "",
+            paymentId: ""
         };
     }
 
@@ -152,16 +150,15 @@ class Checkout extends Component {
             this.props.history.push('/');
         }
     }
-    setPaymentId=(payment)=>{
-        this.setState({paymentId:payment})
+    setPaymentId = (payment) => {
+        this.setState({ paymentId: payment })
     }
-    setAddressId=(address)=>{
-        this.setState({addressId:address.id})
+    setAddressId = (address) => {
+        this.setState({ addressId: address.id })
     }
 
 
     render() {
-        console.log(this.props.location.cartItems);
         return (
             <div>
                 <div>
@@ -174,13 +171,13 @@ class Checkout extends Component {
                             <CheckOutStepper {...this.props} Url={this.props.baseUrl} setPayment={this.setPaymentId} setAddress={this.setAddressId}></CheckOutStepper>
                         </div>
                         <div className="cardContainer">
-                            <Summary {...this.props}  cartItems={this.props.location.cartItems} restaurantDetails={this.props.location.restaurantDetails} paymentId={this.state.paymentId} addressId={this.state.addressId} />
+                            <Summary {...this.props} cartItems={this.props.location.cartItems} restaurantDetails={this.props.location.restaurantDetails} paymentId={this.state.paymentId} addressId={this.state.addressId} />
                         </div>
                     </div>
 
 
                 }
-                
+
             </div>
         )
     }

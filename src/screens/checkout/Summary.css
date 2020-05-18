@@ -1,16 +1,4 @@
 
-/* 
-  ##Device = Low Resolution Tablets, Mobiles (Landscape)
-  ##Screen = B/w 481px to 767px
-*/
-
-@media (min-width: 481px) and (max-width: 767px) {
-    .SummaryCardContainer{
-        margin-left: 50px;
-        padding-bottom: 20px;
-    }
-}
-
 p{
     font-size: x-large;
     font-weight: 400;
@@ -24,3 +12,34 @@ p{
     display: flex;
     justify-content: space-between;
 }
+/* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px)  {
+    .SummaryCardContainer{
+       float:left;
+       margin-left: 100px;
+       margin-bottom: 40px;
+       width: 250%;
+       margin-top: 0;
+       
+    }
+ 
+  }
+
+  
+  /* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .SummaryCardContainer{
+      float: left;
+      margin-left: 30px;
+  }
+  
+}
+ 

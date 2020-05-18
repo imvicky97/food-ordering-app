@@ -23,11 +23,10 @@
 {
     min-height: 244px;
 }
+
 .AddressContainer{
     margin-top:40px;
     margin-bottom: 30px;
-    
-
 }
 
 .InputContainer{
@@ -67,12 +66,13 @@ ul.MuiList-root{
 */
 
 @media (min-width: 481px) and (max-width: 767px) {
-    .AddressContainer{
-        margin-top:40px;
-        margin-bottom: 30px;
-        
-    
+    .DeliveryAddress-gridListSavedAddress-291{
+       float: left;
     }
+    .MuiGridListTile-root  .AddressContainer{
+        padding:0;
+     
 
+    }
     
 }

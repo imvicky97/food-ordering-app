@@ -1,16 +1,9 @@
 import React, { Component } from 'react';
-import { faCartArrowDown } from '@fortawesome/fontawesome-free-solid';
-import Card from '@material-ui/core/Card';
-import Avatar from '@material-ui/core/Avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import IconButton from '@material-ui/core/IconButton';
-import { withStyles, CardContent } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import CardHeader from '@material-ui/core/CardHeader';
-import Badge from '@material-ui/core/Badge';
-import Button from '@material-ui/core/Button';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+
 
 const styles = (theme => ({
 

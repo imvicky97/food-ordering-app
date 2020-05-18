@@ -19,6 +19,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
 const IconStyle = {
+    margin:1,
     float: 'right'
 };
 
@@ -292,7 +293,7 @@ class DeliveryAddress extends Component {
 
                         {this.state.addresses.map(address => (
 
-                            <GridListTile style={CustomStyles} onClick={() => this.iconClickHandler(address)} className={this.state.selectedAddress.id === address.id ? classes.addreesBorder + " AddressBorder " + " AddressContainer" : " AddressContainer"} key={"address" + address.id} cols={1}>
+                            <GridListTile  style={CustomStyles} onClick={() => this.iconClickHandler(address)} className={this.state.selectedAddress.id === address.id ? classes.addreesBorder + " AddressBorder  AddressContainer" : " AddressContainer"} key={"address" + address.id} cols={1}>
                                 <Typography>
                                     {address.flat_building_name}<br />
                                     {address.locality}<br />

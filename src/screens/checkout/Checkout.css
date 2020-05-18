@@ -16,3 +16,40 @@
     margin-right: 100px;
 
 }
+
+/* 
+  ##Device = Tablets, Ipads (landscape)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px)  {
+    .CheckOutBoxContainer{
+        display:block;
+    }
+   
+    .stepperContainer{
+        width: 83%;
+        margin-left:80px;
+    }
+    
+    
+  }
+
+  /* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {
+  
+   .CheckOutBoxContainer{
+       display: block;
+      
+   }
+    
+   .stepperContainer{
+    width: 100%;
+   
+}
+
+  }

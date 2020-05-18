@@ -27,14 +27,14 @@ class Summary extends Component {
     }
 
     UNSAFE_componentWillMount() {
-        // console.log(this.props.cartItems)
+       
         if (sessionStorage.getItem('access-token') === "" || this.props.cartItems === undefined || this.props.restaurantDetails === undefined) {
             this.props.history.push('/');
         } else {
 
             let cartItems = this.props.cartItems;
             let totalAmount = 0;
-            console.log(this.props)
+          
 
             cartItems.forEach(cartItem => {
                 totalAmount = totalAmount + cartItem.totalAmount;
@@ -44,7 +44,7 @@ class Summary extends Component {
                 totalAmount: totalAmount
 
             })
-            console.log(this.state.totalAmount)
+            
         }
     }
 
@@ -115,9 +115,9 @@ class Summary extends Component {
     }
 
     render() {
-        console.log(this.props);
+        
         return (
-            <div>
+            <div className="SummaryContainer"> 
                 {this.props.restaurantDetails !== undefined &&
                     <Card className="SummaryCardContainer">
                         <CardContent>
