@@ -1,0 +1,78 @@
+.dispNone {
+    display: none;
+}
+
+.dispBlock {
+    display: block;
+}
+
+.red {
+    color: red;
+}
+.CheckCircleConatiner{
+    cursor: pointer;
+}
+
+.AddressBorder{
+  box-shadow: 2px 2px #DC143C;
+  border-radius: 4px;
+  
+ 
+}
+.TabContainer
+{
+    min-height: 244px;
+}
+
+.AddressContainer{
+    margin-top:40px;
+    margin-bottom: 30px;
+}
+
+.InputContainer{
+    width: 250px;
+}
+
+.StateConatiner{
+    
+}
+
+
+
+ul.MuiList-root{
+    height: 140px;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  /* Track */
+::-webkit-scrollbar-track {
+   
+    border-radius: 10px;
+  }
+ 
+  /* Handle */
+::-webkit-scrollbar-thumb {
+    background:grey;
+    border-radius: 10px;
+  }
+
+  /* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+    .DeliveryAddress-gridListSavedAddress-291{
+       float: left;
+    }
+    .MuiGridListTile-root  .AddressContainer{
+        padding:0;
+     
+
+    }
+    
+}
