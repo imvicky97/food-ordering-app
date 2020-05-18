@@ -38,7 +38,7 @@ const styles = (theme => ({
     },
     restaurantCategory: { //Style for the Restaurant Category.
         'padding': '8px 0px 8px 0px'
-    },
+    }, 
     avgCost: { //Style for the Average cost.
         'padding-left': '5px'
     },
@@ -102,7 +102,7 @@ class Details extends Component {
             restaurantDetails: [],
             categories: [],
             cartItems: [],
-            totalAmount: 0,
+            totalAmount:0,
             snackBarOpen: false,
             snackBarMessage: "",
             transition: Fade,
@@ -173,10 +173,10 @@ class Details extends Component {
         })
         if (!itemPresentInCart) { //Checking if the item is present if not then new item is created and pushed to the cart.
             let cartItem = {
-                id: item.id,
+                id:item.id,
                 name: item.item_name,
                 price: item.price,
-                totalAmount: item.price,
+                totalAmount:item.price,
                 quantity: 1,
                 itemType: item.item_type,
             }
@@ -184,8 +184,8 @@ class Details extends Component {
         }
         //updating the total amount for the cart.
         let totalAmount = 0;
-        cartItems.forEach(cartItem => {
-            totalAmount = totalAmount + cartItem.totalAmount;
+        cartItems.forEach(cartItem =>{
+            totalAmount = totalAmount + cartItem.totalAmount; 
         })
 
         //Updating the state.
@@ -194,8 +194,7 @@ class Details extends Component {
             cartItems: cartItems,
             snackBarOpen: true,
             snackBarMessage: "Item added to cart!",
-            totalAmount: totalAmount,
-
+            totalAmount:totalAmount,
         })
     }
 
@@ -204,21 +203,21 @@ class Details extends Component {
     //This method updates the quantity of the item and reduces by 1 for each click.
     //If the item is reduced to zero the the item is removed from the cart.
     //After each update a relevant snackbar message is shown.
-    minusButtonClickHandler = (item) => {
+    minusButtonClickHandler =  (item) => {
         let cartItems = this.state.cartItems;
-        let index = cartItems.indexOf(item);
+        let index =  cartItems.indexOf(item);
         let itemRemoved = false;
         cartItems[index].quantity--; //Reducing the quantity of the item
-        if (cartItems[index].quantity === 0) { //Checking if the quantity is zero to remove from the cart
-            cartItems.splice(index, 1);
+        if(cartItems[index].quantity === 0){ //Checking if the quantity is zero to remove from the cart
+            cartItems.splice(index,1);
             itemRemoved = true;
-        } else {
+        }else{
             cartItems[index].totalAmount = cartItems[index].price * cartItems[index].quantity; //Updating the Price of the item
         }
 
         // updating the total amount of the cart
         let totalAmount = 0;
-        cartItems.forEach(cartItem => {
+        cartItems.forEach(cartItem =>{
             totalAmount = totalAmount + cartItem.totalAmount;
         })
 
@@ -227,8 +226,8 @@ class Details extends Component {
             ...this.state,
             cartItems: cartItems,
             snackBarOpen: true,
-            snackBarMessage: itemRemoved ? "Item removed from cart!" : "Item quantity decreased by 1!",
-            totalAmount: totalAmount,
+            snackBarMessage: itemRemoved ? "Item removed from cart!" :"Item quantity decreased by 1!",
+            totalAmount:totalAmount,
 
         })
     }
@@ -239,13 +238,13 @@ class Details extends Component {
     //After each update a relevant snackbar message is shown.
     cartAddButtonClickHandler = (item) => {
         let cartItems = this.state.cartItems;
-        let index = cartItems.indexOf(item);
+        let index =  cartItems.indexOf(item);
         cartItems[index].quantity++; //Updating the quantity ofthe relevant item in the cart
         cartItems[index].totalAmount = cartItems[index].price * cartItems[index].quantity; //updating the total price of the item
 
         //Updating the Total amount ofthe cart 
         let totalAmount = 0;
-        cartItems.forEach(cartItem => {
+        cartItems.forEach(cartItem =>{
             totalAmount = totalAmount + cartItem.totalAmount;
         })
 
@@ -255,7 +254,7 @@ class Details extends Component {
             cartItems: cartItems,
             snackBarOpen: true,
             snackBarMessage: "Item quantity increased by 1!",
-            totalAmount: totalAmount,
+            totalAmount:totalAmount,
 
         })
     }

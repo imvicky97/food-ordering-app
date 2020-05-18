@@ -140,6 +140,7 @@ class Summary extends Component {
                                     NetAmount
                            </div>
                                 <div>
+                                <i className="fa fa-inr" aria-hidden="true" style={{ color: 'grey' }}></i>
                                     {this.state.totalAmount}
                                 </div>
                             </div><br />
