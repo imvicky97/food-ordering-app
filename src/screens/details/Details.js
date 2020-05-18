@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../../common/header/Header';
 import Typography from '@material-ui/core/Typography';
-import { withStyles,CardContent } from '@material-ui/core';
+import { withStyles, CardContent } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
@@ -38,7 +38,7 @@ const styles = (theme => ({
     },
     restaurantCategory: { //Style for the Restaurant Category.
         'padding': '8px 0px 8px 0px'
-    }, 
+    },
     avgCost: { //Style for the Average cost.
         'padding-left': '5px'
     },
@@ -102,11 +102,11 @@ class Details extends Component {
             restaurantDetails: [],
             categories: [],
             cartItems: [],
-            totalAmount:0,
+            totalAmount: 0,
             snackBarOpen: false,
             snackBarMessage: "",
             transition: Fade,
-            badgeVisible:false,
+            badgeVisible: false,
         }
     }
 
@@ -173,10 +173,10 @@ class Details extends Component {
         })
         if (!itemPresentInCart) { //Checking if the item is present if not then new item is created and pushed to the cart.
             let cartItem = {
-                id:item.id,
+                id: item.id,
                 name: item.item_name,
                 price: item.price,
-                totalAmount:item.price,
+                totalAmount: item.price,
                 quantity: 1,
                 itemType: item.item_type,
             }
@@ -184,8 +184,8 @@ class Details extends Component {
         }
         //updating the total amount for the cart.
         let totalAmount = 0;
-        cartItems.forEach(cartItem =>{
-            totalAmount = totalAmount + cartItem.totalAmount; 
+        cartItems.forEach(cartItem => {
+            totalAmount = totalAmount + cartItem.totalAmount;
         })
 
         //Updating the state.
@@ -194,10 +194,72 @@ class Details extends Component {
             cartItems: cartItems,
             snackBarOpen: true,
             snackBarMessage: "Item added to cart!",
-            totalAmount:totalAmount,
-        
+            totalAmount: totalAmount,
+
         })
     }
+
+    //This Method is called when the minus button in the cart is clicked.
+    //It take item as the parameter 
+    //This method updates the quantity of the item and reduces by 1 for each click.
+    //If the item is reduced to zero the the item is removed from the cart.
+    //After each update a relevant snackbar message is shown.
+    minusButtonClickHandler = (item) => {
+        let cartItems = this.state.cartItems;
+        let index = cartItems.indexOf(item);
+        let itemRemoved = false;
+        cartItems[index].quantity--; //Reducing the quantity of the item
+        if (cartItems[index].quantity === 0) { //Checking if the quantity is zero to remove from the cart
+            cartItems.splice(index, 1);
+            itemRemoved = true;
+        } else {
+            cartItems[index].totalAmount = cartItems[index].price * cartItems[index].quantity; //Updating the Price of the item
+        }
+
+        // updating the total amount of the cart
+        let totalAmount = 0;
+        cartItems.forEach(cartItem => {
+            totalAmount = totalAmount + cartItem.totalAmount;
+        })
+
+        //Updating the state
+        this.setState({
+            ...this.state,
+            cartItems: cartItems,
+            snackBarOpen: true,
+            snackBarMessage: itemRemoved ? "Item removed from cart!" : "Item quantity decreased by 1!",
+            totalAmount: totalAmount,
+
+        })
+    }
+
+    //This method is called when the add button in the cart is clicked.
+    //This method takes item as the parameter.
+    //This method finds the corresponding item and updates it quantity by 1 for each click.
+    //After each update a relevant snackbar message is shown.
+    cartAddButtonClickHandler = (item) => {
+        let cartItems = this.state.cartItems;
+        let index = cartItems.indexOf(item);
+        cartItems[index].quantity++; //Updating the quantity ofthe relevant item in the cart
+        cartItems[index].totalAmount = cartItems[index].price * cartItems[index].quantity; //updating the total price of the item
+
+        //Updating the Total amount ofthe cart 
+        let totalAmount = 0;
+        cartItems.forEach(cartItem => {
+            totalAmount = totalAmount + cartItem.totalAmount;
+        })
+
+        //Updating the state
+        this.setState({
+            ...this.state,
+            cartItems: cartItems,
+            snackBarOpen: true,
+            snackBarMessage: "Item quantity increased by 1!",
+            totalAmount: totalAmount,
+
+        })
+    }
+
     //This Method is called when the checkout button in the cart is clicked
     //This method checks for two condition such as if the item is added to the cart & if the user is logged in
     //If both the condition is satisfied then pushes to next checkout screen with the cart & restaurant details.
@@ -226,6 +288,7 @@ class Details extends Component {
         }
     }
 
+
     //Handles Close function of the snackBar
     snackBarClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -242,113 +305,113 @@ class Details extends Component {
     changeBadgeVisibility = () => {
         this.setState({
             ...this.state,
-            badgeVisible:!this.state.badgeVisible,
+            badgeVisible: !this.state.badgeVisible,
         })
     }
 
-    updateTotalAmount=(amount)=>{
+    updateTotalAmount = (amount) => {
         this.setState({
             ...this.state,
-            totalAmount:amount,
+            totalAmount: amount,
         })
-    
+
     }
+    render() {
+        // Styles are stored in the const classes
+        const { classes } = this.props;
+        return (
 
-render() {
-    // Styles are stored in the const classes
-    const { classes } = this.props;
-    return (
-
-        <div>
-            {/* Rendering the header and passing the parameter showHeaderSearchBox as false to not render the searchBox 
+            <div>
+                {/* Rendering the header and passing the parameter showHeaderSearchBox as false to not render the searchBox 
             also changeBadgeVisibility function is passed to change the visibility when the modal is open. */}
-            <Header baseUrl={this.props.baseUrl} showHeaderSearchBox={false} changeBadgeVisibility = {this.changeBadgeVisibility}></Header>
-            {/* Restaurant Details Container */}
-            <div className="restaurant-details-container">
-                <div>
-                    <img src={this.state.restaurantDetails.photoURL} alt="Restaurant" height="215px" width="275px" />
-                </div>
-                <div className="restaurant-details">
-                    <div className="restaurant-name">
-                        <Typography variant="h5" component="h5" className={classes.restaurantName}>{this.state.restaurantDetails.name}</Typography>
-                        <Typography variant="subtitle1" component="p" className={classes.restaurantLocation}>{this.state.restaurantDetails.locality}</Typography>
-                        <Typography variant="subtitle1" component="p" className={classes.restaurantCategory}>{this.state.restaurantDetails.categoriesName}</Typography>
+                <Header baseUrl={this.props.baseUrl} showHeaderSearchBox={false} changeBadgeVisibility={this.changeBadgeVisibility}></Header>
+                {/* Restaurant Details Container */}
+                <div className="restaurant-details-container">
+                    <div>
+                        <img src={this.state.restaurantDetails.photoURL} alt="Restaurant" height="215px" width="275px" />
                     </div>
-                    <div className="restaurant-rating-cost-container">
-                        <div className="restaurant-rating-container">
-                            <div className="restaurant-rating">
-                                <FontAwesomeIcon icon="star" size="sm" color="black" />
-                                <Typography variant="subtitle1" component="p">{this.state.restaurantDetails.rating}</Typography>
-                            </div>
-                            <Typography variant="caption" component="p" className={classes.textRatingCost}  >AVERAGE RATING BY {<span className="restaurant-NoOfCustomerRated">{this.state.restaurantDetails.noOfCustomerRated}</span>} CUSTOMERS</Typography>
+                    <div className="restaurant-details">
+                        <div className="restaurant-name">
+                            <Typography variant="h5" component="h5" className={classes.restaurantName}>{this.state.restaurantDetails.name}</Typography>
+                            <Typography variant="subtitle1" component="p" className={classes.restaurantLocation}>{this.state.restaurantDetails.locality}</Typography>
+                            <Typography variant="subtitle1" component="p" className={classes.restaurantCategory}>{this.state.restaurantDetails.categoriesName}</Typography>
                         </div>
-                        <div className="restaurant-avg-cost-container">
-                            <div className="restaurant-avg-cost">
-                                <i className="fa fa-inr" aria-hidden="true"></i>
-                                <Typography variant="subtitle1" component="p" className={classes.avgCost}>{this.state.restaurantDetails.avgCost}</Typography>
-                            </div>
-                            <Typography variant="caption" component="p" className={classes.textRatingCost} >AVERAGE COST FOR TWO PEOPLE</Typography>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* Menu and Cart Card Container */}
-            <div className="menu-details-cart-container">
-
-                <div className="menu-details">
-                    {this.state.categories.map(category => ( //Iterating for each category in the categories array to display each category
-                        <div key={category.id}>
-                            <Typography variant="overline" component="p" className={classes.categoryName} >{category.category_name}</Typography>
-                            <Divider />
-                            {category.item_list.map(item => ( //Iterating over each item to display each items in the category.
-                                <div className='menu-item-container' key={item.id}>
-                                    <FontAwesomeIcon icon="circle" size="sm" color={item.item_type === "NON_VEG" ? "#BE4A47" : "#5A9A5B"} />
-                                    <Typography variant="subtitle1" component="p" className={classes.menuItemName} >{item.item_name[0].toUpperCase() + item.item_name.slice(1)}</Typography>
-                                    <div className="item-price">
-                                        <i className="fa fa-inr" aria-hidden="true"></i>
-                                        <Typography variant="subtitle1" component="p" className={classes.itemPrice} >{item.price.toFixed(2)}</Typography>
-                                    </div>
-                                    <IconButton className={classes.addButton} aria-label="add" onClick={() => this.itemAddButtonClickHandler(item)}>
-                                        <AddIcon />
-                                    </IconButton>
+                        <div className="restaurant-rating-cost-container">
+                            <div className="restaurant-rating-container">
+                                <div className="restaurant-rating">
+                                    <FontAwesomeIcon icon="star" size="sm" color="black" />
+                                    <Typography variant="subtitle1" component="p">{this.state.restaurantDetails.rating}</Typography>
                                 </div>
-                            ))}
-                        </div>
-                    ))}
-                </div>
-                {/* Cart Card */}
-                <div className="my-cart">
-                <Card className={classes.myCart}>
-                    <CardHeader
-                        avatar={
-                            <Avatar aria-label="shopping-cart" className={classes.shoppingCart}>
-                                <Badge badgeContent={this.state.cartItems.length} color="primary" showZero={true} invisible={this.state.badgeVisible} className={classes.badge}>
-                                    <ShoppingCartIcon />
-                                </Badge>
-                            </Avatar>
-                        }
-                        title="My Cart"
-                        titleTypographyProps={{
-                            variant: 'h6'
-                        }}
-                        className={classes.cartHeader}
-                    />
-                    <CardContent className={classes.cardContent}>
-                        <CartItems cartItems={this.state.cartItems} showPlusMinusButton={true} updateTotal={this.updateTotalAmount}></CartItems>
-                        <div className="total-amount-container">
-                            <Typography variant="subtitle2" component="p" className={classes.totalAmount}>TOTAL AMOUNT</Typography>
-                            <div className="total-price">
-                                <i className="fa fa-inr" aria-hidden="true" ></i>
-                                <Typography variant="subtitle1" component="p" className={classes.itemPrice} id="cart-total-price">{this.state.totalAmount.toFixed(2)}</Typography>
+                                <Typography variant="caption" component="p" className={classes.textRatingCost}  >AVERAGE RATING BY {<span className="restaurant-NoOfCustomerRated">{this.state.restaurantDetails.noOfCustomerRated}</span>} CUSTOMERS</Typography>
+                            </div>
+                            <div className="restaurant-avg-cost-container">
+                                <div className="restaurant-avg-cost">
+                                    <i className="fa fa-inr" aria-hidden="true"></i>
+                                    <Typography variant="subtitle1" component="p" className={classes.avgCost}>{this.state.restaurantDetails.avgCost}</Typography>
+                                </div>
+                                <Typography variant="caption" component="p" className={classes.textRatingCost} >AVERAGE COST FOR TWO PEOPLE</Typography>
                             </div>
                         </div>
+                    </div>
+                </div>
+                {/* Menu and Cart Card Container */}
+                <div className="menu-details-cart-container">
 
-                        <Button variant="contained" color='primary' fullWidth={true} className={classes.checkOutButton} onClick={this.checkOutButtonClickHandler}>CHECKOUT</Button>
+                    <div className="menu-details">
+                        {this.state.categories.map(category => ( //Iterating for each category in the categories array to display each category
+                            <div key={category.id}>
+                                <Typography variant="overline" component="p" className={classes.categoryName} >{category.category_name}</Typography>
+                                <Divider />
+                                {category.item_list.map(item => ( //Iterating over each item to display each items in the category.
+                                    <div className='menu-item-container' key={item.id}>
+                                        <FontAwesomeIcon icon="circle" size="sm" color={item.item_type === "NON_VEG" ? "#BE4A47" : "#5A9A5B"} />
+                                        <Typography variant="subtitle1" component="p" className={classes.menuItemName} >{item.item_name[0].toUpperCase() + item.item_name.slice(1)}</Typography>
+                                        <div className="item-price">
+                                            <i className="fa fa-inr" aria-hidden="true"></i>
+                                            <Typography variant="subtitle1" component="p" className={classes.itemPrice} >{item.price.toFixed(2)}</Typography>
+                                        </div>
+                                        <IconButton className={classes.addButton} aria-label="add" onClick={() => this.itemAddButtonClickHandler(item)}>
+                                            <AddIcon />
+                                        </IconButton>
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                    {/* Cart Card */}
+                    <div className="my-cart">
+                        <Card className={classes.myCart}>
+                            <CardHeader
+                                avatar={
+                                    <Avatar aria-label="shopping-cart" className={classes.shoppingCart}>
+                                        <Badge badgeContent={this.state.cartItems.length} color="primary" showZero={true} invisible={this.state.badgeVisible} className={classes.badge}>
+                                            <ShoppingCartIcon />
+                                        </Badge>
+                                    </Avatar>
+                                }
+                                title="My Cart"
+                                titleTypographyProps={{
+                                    variant: 'h6'
+                                }}
+                                className={classes.cartHeader}
+                            />
+                            <CardContent className={classes.cardContent}>
 
-                    </CardContent>
+                                <CartItems cartItems={this.state.cartItems} showPlusMinusButton={true} updateTotal={this.updateTotalAmount}></CartItems>
+                                <div className="total-amount-container">
+                                <Typography variant="subtitle2" component="p" className={classes.totalAmount}>TOTAL AMOUNT</Typography>
+                                <div className="total-price">
+                                    <i className="fa fa-inr" aria-hidden="true" ></i>
+                                    <Typography variant="subtitle1" component="p" className={classes.itemPrice} id="cart-total-price">{this.state.totalAmount.toFixed(2)}</Typography>
+                                </div>
+                            </div>
 
-                </Card>
-            </div>
+                            <Button variant="contained" color='primary' fullWidth={true} className={classes.checkOutButton} onClick = {this.checkOutButtonClickHandler}>CHECKOUT</Button>
+
+                        </CardContent>
+
+                    </Card>
+                </div>
             </div>
             <div>
                 <Snackbar
